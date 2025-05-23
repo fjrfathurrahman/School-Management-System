@@ -9,65 +9,68 @@ use App\Models\Academic\Classes;
 use App\Models\Academic\Major;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Faker\Factory as Faker;
 
 class StudentSeeder extends Seeder
 {
     public function run(): void
     {
+        $faker = Faker::create('id_ID');
         $class = Classes::first();
         $major = Major::first();
 
-        for ($i = 1; $i <= 20; $i++) {
-            // Buat User untuk Student
-            $user = User::create([
-                'username'   => 'student' . $i,
-                'email'      => 'student' . $i . '@example.com',
-                'password'   => Hash::make('password'),
-                'user_type'  => 'student',
+        for ($i = 1; $i <= 25; $i++) {
+            // Student User
+            $studentUser = User::create([
+                'username' => 'student' . $i,
+                'email' => "student{$i}@example.com",
+                'password' => Hash::make('password'),
+                'user_type' => 'student',
             ]);
 
-            // Buat User untuk Parent
-            $parent = User::create([
-                'username'   => 'parent' . $i,
-                'email'      => 'parent' . $i . '@example.com',
-                'password'   => Hash::make('password'),
-                'user_type'  => 'parent',
+            $studentUser->assignRole('student');
+
+            // Parent User
+            $parentUser = User::create([
+                'username' => 'parent' . $i,
+                'email' => "parent{$i}@example.com",
+                'password' => Hash::make('password'),
+                'user_type' => 'parent',
             ]);
 
-            $user->assignRole('student');
-
-            // Buat UserParent
+            // Parent Profile
             $parent = UserParent::create([
-                'user_id'     => $parent->id, // jika belum ada user login khusus parent
-                'name'        => 'Orang Tua ' . $i,
-                'job'         => 'Wiraswasta',
-                'gender'      => $i % 2 == 0 ? 'male' : 'female',
-                'birth_place' => 'Kota ' . $i,
-                'birth_date'  => now()->subYears(40)->subDays($i),
-                'religion'    => 'Islam',
-                'phone'       => '0813' . rand(10000000, 99999999),
-                'address'     => 'Jl. Alamat Orang Tua ' . $i,
-                'avatar'      => 'default.png',
-                'relation'    => 'father',
+                'user_id' => $parentUser->id,
+                'name' => $faker->name,
+                'job' => $faker->jobTitle,
+                'gender' => $faker->randomElement(['male', 'female']),
+                'birth_place' => $faker->city,
+                'birth_date' => $faker->dateTimeBetween('-50 years', '-35 years'),
+                'religion' => 'Islam',
+                'phone' => $faker->phoneNumber,
+                'address' => $faker->address,
+                'avatar' => 'default.png',
+                'relation' => 'father',
             ]);
 
-            // Buat Student
+            // Student Profile
             Student::create([
-                'user_id'     => $user->id,
-                'class_id'    => $class->id,
-                'major_id'    => $major->id,
-                'parent_id'   => $parent->id,
-                'name'        => 'Siswa ' . $i,
-                'nis'         => 'NIS' . str_pad($i, 4, '0', STR_PAD_LEFT),
-                'nisn'        => 'NISN' . str_pad($i, 6, '0', STR_PAD_LEFT),
-                'gender'      => $i % 2 == 0 ? 'male' : 'female',
-                'birth_place' => 'Kota ' . $i,
-                'birth_date'  => now()->subYears(17)->subDays($i),
-                'phone'       => '0821' . rand(10000000, 99999999),
-                'address'     => 'Alamat Siswa ' . $i,
-                'religion'    => 'Islam',
-                'avatar'      => null ,
+                'user_id' => $studentUser->id,
+                'class_id' => $class->id,
+                'major_id' => $major->id,
+                'parent_id' => $parent->id,
+                'name' => $faker->name,
+                'nis' => 'NIS' . str_pad($i, 4, '0', STR_PAD_LEFT),
+                'nisn' => 'NISN' . str_pad($i, 6, '0', STR_PAD_LEFT),
+                'gender' => $faker->randomElement(['male', 'female']),
+                'birth_place' => $faker->city,
+                'birth_date' => $faker->dateTimeBetween('-19 years', '-16 years'),
+                'phone' => $faker->phoneNumber,
+                'address' => $faker->address,
+                'religion' => 'Islam',
+                'avatar' => null,
             ]);
         }
     }
 }
+

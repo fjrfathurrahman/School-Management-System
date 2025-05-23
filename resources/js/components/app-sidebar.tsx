@@ -42,8 +42,8 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Siswa",
+          url: "/dashboard/siswa",
         },
         {
           title: "Starred",
