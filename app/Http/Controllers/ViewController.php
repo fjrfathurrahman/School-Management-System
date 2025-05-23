@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\StudentResource;
+use App\Models\User\Student;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class ViewController extends Controller
 {
@@ -25,6 +28,13 @@ class ViewController extends Controller
 
     public function studentList(Request $request)
     {
-        return Inertia::render('admin/student/ListStudent');
+        $students = QueryBuilder::for(Student::class)
+            ->fullRelationship()
+            ->defaultSort('name')
+            ->paginate(10);
+
+        return Inertia::render('admin/student/ListStudent', [
+            'responsse' =>  StudentResource::collection($students), 
+        ]);
     }
 }

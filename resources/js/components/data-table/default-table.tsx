@@ -8,14 +8,26 @@ import { Button } from '../ui/button';
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    initialState?: {
+        pagination: {
+            pageSize: number;
+            pageIndex: number;
+        };
+    }
 }
 
-export function DefaultDataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DefaultDataTable<TData, TValue>({ columns, data, initialState }: DataTableProps<TData, TValue>) {
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
+        initialState: {
+            pagination: {
+                pageSize: initialState?.pagination.pageSize,
+                pageIndex: initialState?.pagination.pageIndex
+            }
+        }
     });
 
     return (
