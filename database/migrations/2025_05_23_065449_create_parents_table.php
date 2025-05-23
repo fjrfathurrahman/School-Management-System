@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,16 +12,19 @@ return new class extends Migration
     {
         Schema::create('parents', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('name');
             $table->string('job')->nullable();
             $table->enum('gender', ['male', 'female'])->nullable();
             $table->string('birth_place')->nullable();
             $table->date('birth_date')->nullable();
             $table->string('religion')->nullable();
             $table->string('phone')->nullable();
-            $table->string('address')->nullable();
+            $table->text('address')->nullable();
             $table->string('avatar')->nullable();
+            $table->enum('relation', ['father', 'mother', 'guardian'])->nullable();
             $table->timestamps();
+
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
         });
     }
 
