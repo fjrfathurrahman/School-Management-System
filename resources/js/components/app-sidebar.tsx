@@ -25,6 +25,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { usePage } from "@inertiajs/react"
+import { SharedData } from "@/types"
 
 const data = {
   user: {
@@ -151,6 +153,8 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { auth } = usePage<SharedData>().props;
+
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -176,7 +180,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={auth.user} />
       </SidebarFooter>
     </Sidebar>
   )
