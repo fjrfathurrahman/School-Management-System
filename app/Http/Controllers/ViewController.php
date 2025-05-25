@@ -28,13 +28,6 @@ class ViewController extends Controller
 
     public function studentList(Request $request)
     {
-        $students = QueryBuilder::for(Student::class)
-            ->fullRelationship()
-            ->defaultSort('name')
-            ->paginate(10);
-
-        return Inertia::render('admin/student/ListStudent', [
-            'responsse' =>  StudentResource::collection($students), 
-        ]);
+        return Inertia::render('admin/student/ListStudent');
     }
 }

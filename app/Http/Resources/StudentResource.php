@@ -19,7 +19,6 @@ class StudentResource extends JsonResource
             'nisn' => $this->nisn,
             'nis' => $this->nis,
             'name' => $this->name,
-            'email' => $this->email,
             'phone' => $this->phone,
             'address' => $this->address,
             'gender' => $this->gender,
@@ -46,7 +45,6 @@ class StudentResource extends JsonResource
             'parent' => [
                 'parent_id' => $this->parent_id,
                 'name' => $this->parent->name,
-                'email' => $this->parent->email,
                 'phone' => $this->parent->phone,
                 'address' => $this->parent->address,
                 'gender' => $this->parent->gender,
@@ -54,6 +52,7 @@ class StudentResource extends JsonResource
                 'birth_place' => $this->parent->birth_place,
                 'birth_date' => $this->parent->birth_date,
                 'avatar' => $this->parent->avatar,
+                'relation' => $this->parent->relation
             ]
         ];
     }

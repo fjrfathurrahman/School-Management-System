@@ -1,22 +1,20 @@
-import { DefaultDataTable } from '@/components/data-table/default-table';
-import DashboardLayout from '@/layouts/dashboard-layout';
-import { ColumnsStudent } from '@/lib/columns';
-import { usePage } from '@inertiajs/react';
+import { TableStudents } from '@/contents/student/TableStudent';
+import DashboardLayout, { Breadcrumb } from '@/layouts/dashboard-layout';
 
-interface PROPS {
-    responsse: {
-        data: [];
-    };
-    [key: string]: unknown;
-}
+const breadcrumb: Breadcrumb[] = [
+    {
+        title: 'Dashboard',
+        url: '/dashboard',
+    },
+    {
+        title: 'Daftar Siswa',
+    },
+];
 
 export default function ListStudentPage() {
-    const { responsse } = usePage<PROPS>().props;
-    return <pre>{JSON.stringify(responsse, null, 2)}</pre>;
-
     return (
-        <DashboardLayout>
-            <DefaultDataTable data={responsse.data} columns={ColumnsStudent()} />
+        <DashboardLayout breadcrumbs={breadcrumb}>
+            <TableStudents/>
         </DashboardLayout>
     );
 }

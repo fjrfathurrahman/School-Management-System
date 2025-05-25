@@ -87,7 +87,7 @@ export default ({ children, title = 'Dashboard', className, breadcrumbs = [], ..
                     </div>
                 </header>
 
-                <main className={cn('p-4', className)}>{children}</main>
+                <main className={cn('p-6', className)}>{children}</main>
             </SidebarInset>
         </SidebarProvider>
     );
