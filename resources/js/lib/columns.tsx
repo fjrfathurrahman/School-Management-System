@@ -1,3 +1,5 @@
+import { Badge } from '@/components/ui/badge';
+import { IStudent } from '@/types/response';
 import { ColumnDef } from '@tanstack/react-table';
 import { Link } from 'react-router-dom';
 
@@ -35,9 +37,9 @@ export const ColumnsStudent = () =>
             id: 'Kelas & Jurusan',
             header: 'Kelas & Jurusan',
             cell: ({ row }) => (
-                <div className="text-sm">
+                <Badge variant="outline" className="text-sm">
                     {row.original.classroom.name} - {row.original.major.short}
-                </div>
+                </Badge>
             ),
         },
         {
@@ -68,4 +70,4 @@ export const ColumnsStudent = () =>
                 return <div className={`w-max rounded px-2 py-0.5 text-sm ${colors}`}>{row.original.gender}</div>;
             },
         },
-    ] as ColumnDef<Student>[];
+    ] as ColumnDef<IStudent>[];

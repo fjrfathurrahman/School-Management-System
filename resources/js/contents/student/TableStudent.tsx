@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { FormAddStudent } from '@/contents/student/FormStudent';
 import { useDataTable } from '@/hooks/use-data-table';
 import { useGetAcademic } from '@/hooks/use-get';
-import { useGetStudent } from '@/hooks/user/use-student';
+import { useGetStudents } from '@/hooks/user/use-student';
 import { ColumnsStudent } from '@/lib/columns';
 import { ArrowDownToLine, FileSpreadsheet, Upload, UserPlus } from 'lucide-react';
 import { parseAsString, useQueryState } from 'nuqs';
@@ -27,7 +27,7 @@ function TableStudents() {
     const searchParams = { ...filters, perPage, page, sort, search: debouncedSearch };
 
     // Mendapatkan data student dan academic untuk filter
-    const { students, response, isPending } = useGetStudent(searchParams);
+    const { students, response, isPending } = useGetStudents(searchParams);
     const { academic } = useGetAcademic();
 
     // Agar tidak merender ulang
@@ -77,7 +77,7 @@ function TableStudents() {
             {/* Filter Section */}
             <Card>
                 <CardHeader>
-                    <h3 className="text-2xl font-semibold tracking-tight">Filtering & Pencarian</h3>
+                    <h4>Filtering & Pencarian</h4>
                     <p>Filter berdasarkan nama, NISN, kelas, atau jurusan</p>
                 </CardHeader>
 
@@ -131,7 +131,7 @@ function TableStudents() {
             <DataTableCustom
                 table={table}
                 title="Data Table Siswa"
-                description={`Berhasil mendapatkan data siswa berjumlah ${response?.meta?.total} siswa`}
+                description={`Berhasil mendapatkan data siswa berjumlah ${response?.meta?.total || 0} siswa`}
                 isLoading={isPending}
                 toolbarItems={toolbarItems}
             />

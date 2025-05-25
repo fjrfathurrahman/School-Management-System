@@ -43,7 +43,7 @@ class StudentResource extends JsonResource
                 'description' => $this->major->description,
                 'short' => $this->major->short
             ],
-            'parent' => [
+            'parent' => $this->parent ? [
                 'parent_id' => $this->parent_id,
                 'name' => $this->parent->name,
                 'phone' => $this->parent->phone,
@@ -54,7 +54,7 @@ class StudentResource extends JsonResource
                 'birth_date' => $this->parent->birth_date,
                 'avatar' => $this->parent->avatar,
                 'relation' => $this->parent->relation
-            ]
+            ] : [],
         ];
     }
 }

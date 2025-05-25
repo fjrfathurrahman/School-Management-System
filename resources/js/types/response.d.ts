@@ -48,6 +48,7 @@ export interface IUser {
 }
 
 export interface IMajor {
+    id: number;
     major_id: number;
     name: string;
     short: string;
@@ -56,25 +57,24 @@ export interface IMajor {
 }
 
 export interface IClass {
+    id: number;
     class_id: number;
     name: string;
 }
 
 export interface IPagination {
-    meta: {
-        current_page: number;
-        last_page: number;
-        from: number;
-        per_page: number;
-        links: [
-            {
-                url: string;
-                label: string;
-                active: boolean;
-            },
-        ];
-        path: string;
-        to: number;
-        total: number;
-    };
+    current_page: number;
+    last_page: number;
+    from: number;
+    per_page: number;
+    links: [
+        {
+            url: string;
+            label: string;
+            active: boolean;
+        },
+    ];
+    path: string;
+    to: number;
+    total: number;
 }

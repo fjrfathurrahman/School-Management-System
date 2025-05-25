@@ -15,7 +15,7 @@ import { ChevronDown, Columns3, Database, Eye, EyeOff, Filter, SortAsc, SortDesc
 import { parseAsString, useQueryState } from 'nuqs';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent, CardHeader } from '../ui/card';
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableSkeleton } from './data-table-skeleton';
@@ -70,7 +70,7 @@ function DataTableCustom<TData>({
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     {/* Heading */}
                     <div className="space-y-1">
-                        <CardTitle className="text-2xl font-semibold tracking-tight">{title}</CardTitle>
+                        <h4>{title}</h4>
                         <p>{description}</p>
                     </div>
 
@@ -156,7 +156,7 @@ function DataTableCustom<TData>({
             </CardHeader>
 
             <CardContent className="p-0">
-                <div className={cn('flex w-full flex-col', className)} {...props}>
+                <div className={cn('flex flex-col', className)} {...props}>
                     {children}
 
                     {/* Table Container */}
@@ -269,7 +269,7 @@ const renderToolbarItem = (item: ToolbarItem, index: number) => {
                             {item.icon} {item.title}
                         </Button>
                     </SheetTrigger>
-                    <SheetContent>{item.content}</SheetContent>
+                    <SheetContent className="w-full sm:max-w-2xl overflow-y-auto">{item.content}</SheetContent>
                 </Sheet>
             );
         case 'button':
