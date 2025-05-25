@@ -23,19 +23,22 @@ class AcademicSeeder extends Seeder
             Classes::firstOrCreate(['name' => $class]);
         }
 
-        // Data jurusan + deskripsi
+        // Data jurusan
         $majors = [
             [
                 'name' => 'Rekayasa Perangkat Lunak',
-                'description' => 'Jurusan yang fokus pada pengembangan perangkat lunak dan aplikasi berbasis web maupun mobile.'
+                'description' => 'Jurusan yang fokus pada pengembangan perangkat lunak dan aplikasi berbasis web maupun mobile.',
+                'short' => 'RPL'
             ],
             [
                 'name' => 'Teknik Jaringan Komputer',
-                'description' => 'Jurusan yang mempelajari tentang instalasi, konfigurasi, dan pemeliharaan jaringan komputer.'
+                'description' => 'Jurusan yang mempelajari tentang instalasi, konfigurasi, dan pemeliharaan jaringan komputer.',
+                'short' => 'TKJ'
             ],
             [
                 'name' => 'Akuntansi Keuangan',
-                'description' => 'Jurusan yang membekali siswa dengan kemampuan dalam pencatatan, pelaporan, dan analisis keuangan.'
+                'description' => 'Jurusan yang membekali siswa dengan kemampuan dalam pencatatan, pelaporan, dan analisis keuangan.',
+                'short' => 'AK'
             ]
         ];
 
@@ -43,7 +46,8 @@ class AcademicSeeder extends Seeder
             Major::firstOrCreate([
                 'name' => $major['name'],
                 'slug' => Str::slug($major['name']),
-                'description' => $major['description']
+                'description' => $major['description'],
+                'short' => $major['short']
             ]);
         }
     }

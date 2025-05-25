@@ -35,7 +35,7 @@ class StudentController extends Controller
             // Filter: Major
             if ($request->filled('major')) {
                 $query->whereHas('major', function ($q) use ($request) {
-                    $q->where('name', $request->input('major'));
+                    $q->where('short', $request->input('major'));
                 });
             }
 

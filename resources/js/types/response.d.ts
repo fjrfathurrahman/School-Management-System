@@ -1,10 +1,10 @@
-interface Response<T = null> {
+export interface IResponse<T = null> {
     status: boolean;
     message: string;
-    data: T;
+    data: T; // Jika mendapatkan data, maka data akan diisi dengan tipe T tidak null
 }
 
-interface Student {
+export interface IStudent {
     id: number;
     user_id: number;
     nis: string;
@@ -18,16 +18,16 @@ interface Student {
     religion: string | null;
     avatar: string | null;
 
-    classroom: Class;
-    major: Major;
-    user: User;
-    parent: Parent;
+    classroom: IClass;
+    major: IMajor;
+    user: IUser;
+    parent: IParent;
 
     created_at: string;
     updated_at: string;
 }
 
-interface Parent {
+export interface IParent {
     parent_id: number;
     name: string;
     gender: string | null;
@@ -40,14 +40,14 @@ interface Parent {
     relation: string | null;
 }
 
-interface User {
+export interface IUser {
     user_id: number;
     username: string;
     email: string;
     email_verified_at: string | null;
 }
 
-interface Major {
+export interface IMajor {
     major_id: number;
     name: string;
     short: string;
@@ -55,12 +55,12 @@ interface Major {
     description: string;
 }
 
-interface Class {
+export interface IClass {
     class_id: number;
     name: string;
 }
 
-interface Pagination {
+export interface IPagination {
     meta: {
         current_page: number;
         last_page: number;

@@ -14,7 +14,7 @@ class RolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = ['super_admin', 'admin', 'operator', 'teacher', 'student', 'parent'];
+        $roles = ['superadmin', 'admin', 'operator', 'teacher', 'student', 'parent'];
 
         foreach ($roles as $role) {
             Role::firstOrCreate(['name' => $role]);
@@ -36,7 +36,7 @@ class RolePermissionSeeder extends Seeder
             Permission::firstOrCreate(['name' => $perm]);
         }
 
-        Role::findByName('super_admin')->givePermissionTo(Permission::all());
+        Role::findByName('superadmin')->givePermissionTo(Permission::all());
         Role::findByName('teacher')->givePermissionTo(['manage students', 'import/export attendances', 'approve permissions']);
         Role::findByName('operator')->givePermissionTo(['manage classes', 'manage majors', 'manage users', 'import/export students', 'import/export teachers', 'import/export attendances', 'approve permissions']);
     }

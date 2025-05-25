@@ -11,6 +11,7 @@ class Major extends Model
         'name',
         'slug',
         'description',
+        'short'
     ];
 
     public function classes()

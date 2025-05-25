@@ -40,7 +40,8 @@ class StudentResource extends JsonResource
                 'major_id' => $this->major_id,
                 'name' => $this->major->name,
                 'slug' => $this->major->slug,
-                'description' => $this->major->description
+                'description' => $this->major->description,
+                'short' => $this->major->short
             ],
             'parent' => [
                 'parent_id' => $this->parent_id,

@@ -1,67 +1,51 @@
 import { DataTableCustom, ToolbarItem } from '@/components/data-table/data-table-custom';
-import { FormAddStudent } from '@/components/forms/FormStudent';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { FormAddStudent } from '@/contents/student/FormStudent';
 import { useDataTable } from '@/hooks/use-data-table';
+import { useGetAcademic } from '@/hooks/use-get';
+import { useGetStudent } from '@/hooks/user/use-student';
 import { ColumnsStudent } from '@/lib/columns';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import { ArrowDownToLine, FileSpreadsheet, Upload, UserPlus } from 'lucide-react';
 import { parseAsString, useQueryState } from 'nuqs';
-import { useMemo, useState } from 'react';
-import { toast } from 'sonner';
+import { useCallback, useMemo, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
-interface ResponseStudents extends Pagination {
-    data: Student[];
-    message: string;
-    status: string;
-}
-
-async function fetchStudents(filters = {}) {
-    const params = new URLSearchParams(filters).toString();
-    try {
-        return (await axios.get<ResponseStudents>(`/api/v1/students?${params}`)).data;
-    } catch (e) {
-        console.error(e);
-        toast.error('Sorry, Gagal mendapatkan data :(');
-    }
-}
-
 function TableStudents() {
+    // Setup filter
     const [filters, setFilters] = useState({ class: '', major: '', search: '' });
 
+    // Query params
     const [sort] = useQueryState('sort', parseAsString.withDefault('asc'));
     const [perPage] = useQueryState('perPage', parseAsString.withDefault('20'));
     const [page] = useQueryState('page', parseAsString.withDefault('1'));
 
+    // Debounce search for better performance
     const [debouncedSearch] = useDebounce(filters.search, 500);
-
     const searchParams = { ...filters, perPage, page, sort, search: debouncedSearch };
 
-    const { data: response, isPending } = useQuery({
-        queryKey: ['students', searchParams],
-        queryFn: () => fetchStudents(searchParams),
-    });
+    // Mendapatkan data student dan academic untuk filter
+    const { students, response, isPending } = useGetStudent(searchParams);
+    const { academic } = useGetAcademic();
 
     // Agar tidak merender ulang
-    const studentData = useMemo(() => response?.data || [], [response?.data]);
+    const data = useMemo(() => students || [], [students]);
 
     // Setup data table hook
     const { table } = useDataTable({
-        data: studentData,
+        data,
         columns: ColumnsStudent(),
         pageCount: Number(response?.meta?.last_page),
     });
 
-    // Handler untuk update filter
-    const handleFilterChange = (key: keyof typeof filters, value: string) => {
+    // Handle change filter
+    const handleFilterChange = useCallback((key: keyof typeof filters, value: string) => {
         setFilters((prev) => ({ ...prev, [key]: value }));
-    };
+    }, []);
 
-    // ...
+    // Toolbar items: Action Tambahan
     const toolbarItems: ToolbarItem[] = [
         {
             component: 'dropdown',
@@ -112,9 +96,11 @@ function TableStudents() {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="default">Semua Kelas</SelectItem>
-                            <SelectItem value="X">X</SelectItem>
-                            <SelectItem value="XI">XI</SelectItem>
-                            <SelectItem value="XII">XII</SelectItem>
+                            {academic?.classes.map((cls) => (
+                                <SelectItem value={cls.name} key={cls.name}>
+                                    {cls.name}
+                                </SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
 
@@ -125,8 +111,11 @@ function TableStudents() {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="default">Semua Jurusan</SelectItem>
-                            <SelectItem value="RPL">Pengembangan Perangkat Lunak</SelectItem>
-                            <SelectItem value="TKJ">Teknik Komputer dan Jaringan</SelectItem>
+                            {academic?.majors.map((major) => (
+                                <SelectItem value={major.short} key={major.name}>
+                                    {major.name}
+                                </SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
 
@@ -139,7 +128,13 @@ function TableStudents() {
             </Card>
 
             {/* Data Table */}
-            <DataTableCustom table={table} isLoading={isPending} toolbarItems={toolbarItems} />
+            <DataTableCustom
+                table={table}
+                title="Data Table Siswa"
+                description={`Berhasil mendapatkan data siswa berjumlah ${response?.meta?.total} siswa`}
+                isLoading={isPending}
+                toolbarItems={toolbarItems}
+            />
         </main>
     );
 }

@@ -15,10 +15,10 @@ import { ChevronDown, Columns3, Database, Eye, EyeOff, Filter, SortAsc, SortDesc
 import { parseAsString, useQueryState } from 'nuqs';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableSkeleton } from './data-table-skeleton';
-import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
 
 interface DataTableProps<TData> extends React.ComponentProps<'div'> {
     title?: string;
@@ -50,7 +50,7 @@ function DataTableCustom<TData>({
     className,
     children,
     title = 'Data Table',
-    description = 'Lorem ipsum dolor anjay mabar amet',
+    description = 'Lorem ipsum dolor amet oh take me back',
     showColumnToggle = true,
     showSort = true,
     isLoading = false,
@@ -71,7 +71,7 @@ function DataTableCustom<TData>({
                     {/* Heading */}
                     <div className="space-y-1">
                         <CardTitle className="text-2xl font-semibold tracking-tight">{title}</CardTitle>
-                        <CardDescription className="text-base">{description}</CardDescription>
+                        <p>{description}</p>
                     </div>
 
                     {/* Toolbar Section */}
@@ -161,7 +161,9 @@ function DataTableCustom<TData>({
 
                     {/* Table Container */}
                     <div className="relative px-4">
-                        {isLoading ? <DataTableSkeleton columnCount={4} filterCount={3} /> : (
+                        {isLoading ? (
+                            <DataTableSkeleton columnCount={4} filterCount={3} />
+                        ) : (
                             <div className="overflow-hidden border-t">
                                 <div className="overflow-auto">
                                     <Table>

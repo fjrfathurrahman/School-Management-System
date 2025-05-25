@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
 import { useForm } from "@inertiajs/react";
-import InputError from "../input-error";
+import InputError from "../../components/input-error";
 
 interface FormProps extends React.HTMLAttributes<HTMLFormElement> {
     key?: string
