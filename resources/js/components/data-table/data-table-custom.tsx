@@ -16,6 +16,7 @@ import { parseAsString, useQueryState } from 'nuqs';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader } from '../ui/card';
+import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableSkeleton } from './data-table-skeleton';
@@ -37,7 +38,7 @@ interface DropdownItem {
 }
 
 export interface ToolbarItem {
-    component: 'sheet' | 'button' | 'dropdown';
+    component: 'sheet' | 'button' | 'dropdown' | 'dialog';
     icon: React.ReactNode;
     title: string;
     onPress?: () => void; // only for button
@@ -269,7 +270,7 @@ const renderToolbarItem = (item: ToolbarItem, index: number) => {
                             {item.icon} {item.title}
                         </Button>
                     </SheetTrigger>
-                    <SheetContent className="w-full sm:max-w-2xl overflow-y-auto">{item.content}</SheetContent>
+                    <SheetContent className="w-full overflow-y-auto sm:max-w-2xl">{item.content}</SheetContent>
                 </Sheet>
             );
         case 'button':
@@ -295,6 +296,17 @@ const renderToolbarItem = (item: ToolbarItem, index: number) => {
                         ))}
                     </DropdownMenuContent>
                 </DropdownMenu>
+            );
+        case 'dialog':
+            return (
+                <Dialog>
+                    <DialogTrigger>
+                        <Button size="sm">
+                            {item.icon} {item.title}
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent>{item.content}</DialogContent>
+                </Dialog>
             );
         default:
             return null;

@@ -25,9 +25,9 @@ function useGetStudents(searchParams?: Record<string, string> | null) {
             });
             return response.data;
         },
-        networkMode: 'online',
     });
 
+    // Handle error
     if (rest.isError) {
         toast.error(rest.error?.response?.data?.message ?? 'Terjadi kesalahan');
     }

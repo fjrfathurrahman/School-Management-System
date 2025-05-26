@@ -3,7 +3,6 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import InputError from '../input-error';
-import { ChangeEvent } from 'react';
 
 interface FormInputRenderProps {
   component: 'input' | 'select' | 'textarea';
@@ -15,6 +14,7 @@ interface FormInputRenderProps {
   placeholder?: string;
   errors?: string;
   options?: (string | { value: string; label: string })[];
+  disabled?: boolean;
 }
 
 export function FormInputRender({
@@ -27,14 +27,8 @@ export function FormInputRender({
   placeholder,
   errors,
   options,
+  disabled
 }: FormInputRenderProps) {
-  //   const handleChange = (value: string | number | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-  //   if (typeof value === 'string' || typeof value === 'number') {
-  //     onChange(value);
-  //   } else {
-  //     onChange(value.target.value);
-  //   }
-  // };
   return (
     <div>
       <Label>{label}</Label>
@@ -45,10 +39,11 @@ export function FormInputRender({
           onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
           className={className}
           placeholder={placeholder}
+          disabled={disabled}
         />
       )}
       {component === 'select' && (
-        <Select value={value.toString()} onValueChange={(val) => onChange(val)}>
+        <Select value={value.toString()} onValueChange={(val) => onChange(val)} disabled={disabled}>
           <SelectTrigger className={className || 'w-full'}>
             <SelectValue />
           </SelectTrigger>
@@ -70,6 +65,7 @@ export function FormInputRender({
           onChange={onChange as React.ChangeEventHandler<HTMLTextAreaElement>}
           className={className}
           placeholder={placeholder}
+          disabled={disabled}
         />
       )}
       <InputError message={errors} />

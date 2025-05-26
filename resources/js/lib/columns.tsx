@@ -28,9 +28,9 @@ export const ColumnsStudent = () =>
             accessorKey: 'name',
             header: 'Nama Lengkap',
             cell: ({ row }) => (
-                <Link to={`/student/${row.original.nisn}`} className="font-medium underline underline-offset-4">
+                <a href={`/dashboard/siswa/${row.original.id}`} className="font-medium underline underline-offset-4">
                     {row.original.name}
-                </Link>
+                </a>
             ),
         },
         {

@@ -88,7 +88,7 @@ class StudentController extends Controller
             // return response
             return ApiResponseHelper::success($response, 'Berhasil mengambil data siswa');
         } catch (\Throwable $th) {
-            return ApiResponseHelper::error('Gagk ' . $th->getMessage());
+            return ApiResponseHelper::error('Gagal mengambil data siswa: ' . $th->getMessage());
         }
     }
 

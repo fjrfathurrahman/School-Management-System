@@ -3,7 +3,6 @@
 use App\Http\Controllers\User\StudentController;
 use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 // Home
 Route::get('/', [ViewController::class, 'home'])->name('home');
@@ -12,8 +11,9 @@ Route::get('/', [ViewController::class, 'home'])->name('home');
 Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [ViewController::class, 'dashboard'])->name('dashboard');
 
-    // roles students
+    // Students
     Route::get('/siswa', [ViewController::class, 'studentList'])->name('student.list');
+    Route::get('/siswa/{student}', [ViewController::class, 'studentDetail'])->name('student.detail');
 });
 
 

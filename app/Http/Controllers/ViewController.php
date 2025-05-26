@@ -16,7 +16,7 @@ class ViewController extends Controller
         return Inertia::render('welcome');
     }
 
-    
+
     // View Page untuk admin 
 
 
@@ -26,8 +26,19 @@ class ViewController extends Controller
         return Inertia::render('admin/dashboard');
     }
 
+    // List Student
     public function studentList(Request $request)
     {
         return Inertia::render('admin/student/ListStudent');
+    }
+
+    // Detail Student
+    public function studentDetail(Student $student)
+    {
+        $student = Student::fullRelationship()->findOrFail($student->id);
+
+        return Inertia::render('admin/student/DetailStudent', [
+            'response' => new StudentResource($student),
+        ]);
     }
 }
