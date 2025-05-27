@@ -19,7 +19,8 @@ Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () 
 
 // Routes Action for role admin
 Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
-    Route::resource('students', StudentController::class)->names('students')->only(['store', 'update', 'destroy']);
+    // NOTE: perlu diperbaiki url
+    Route::resource('students', StudentController::class)->names('students')->only(['store', 'update']);
 });
 
 require __DIR__.'/settings.php';

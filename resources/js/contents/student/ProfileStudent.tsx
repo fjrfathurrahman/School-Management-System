@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useDeleteStudent } from '@/hooks/user/use-student';
 import { IStudent } from '@/types/response';
 import {
     AlertTriangle,
@@ -223,6 +224,14 @@ function Attendance() {
 
 function Actions(student: IStudent) {
     const [isEditing, setIsEditing] = useState(false);
+    const studentQuery = useDeleteStudent(student.id as number); // untuk 
+
+    // Handle Delete
+    const handleDelete = () => {
+        if (confirm('Apakah anda yakin ingin menghapus data ini?')) {
+            studentQuery.mutateAsync();
+        }
+    };
 
     return (
         <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -237,6 +246,7 @@ function Actions(student: IStudent) {
                 </CardHeader>
 
                 <CardContent className="space-y-4 p-6">
+                    {/* Update Form */}
                     <FormUpdateStudent isDisabled={!isEditing} dataDefault={student}>
                         <Button type="button" onClick={() => setIsEditing(!isEditing)} variant="outline">
                             <Settings />
@@ -265,7 +275,7 @@ function Actions(student: IStudent) {
                                 secara permanen.
                             </p>
                         </div>
-                        <Button variant="destructive" className="w-full">
+                        <Button variant="destructive" className="w-full" onClick={handleDelete}>
                             <Trash2 className="mr-2 h-4 w-4" />
                             Hapus Data Siswa
                         </Button>

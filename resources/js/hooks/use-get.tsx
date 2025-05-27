@@ -8,12 +8,10 @@ interface ResAcademic {
 }
 
 function useGetAcademic() {
-    const { data, isPending, isError } = useQuery<ResAcademic>({
+    return useQuery<ResAcademic>({
         queryKey: ['academic', 'classes', 'majors'],
         queryFn: async () => (await axios.get('/api/v1/academic')).data,
     });
-
-    return { academic: data, isPending, isError };
 }
 
 export { useGetAcademic };

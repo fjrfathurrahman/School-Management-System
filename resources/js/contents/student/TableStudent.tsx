@@ -27,17 +27,17 @@ function TableStudents() {
     const searchParams = { ...filters, perPage, page, sort, search: debouncedSearch };
 
     // Mendapatkan data student dan academic untuk filter
-    const { students, response, isPending } = useGetStudents(searchParams);
-    const { academic } = useGetAcademic();
+    const studentQuery = useGetStudents(searchParams);
+    const academicQuery = useGetAcademic();
 
     // Agar tidak merender ulang
-    const data = useMemo(() => students || [], [students]);
+    const data = useMemo(() => studentQuery.data || [], [studentQuery.data]);
 
     // Setup data table hook
     const { table } = useDataTable({
         data,
         columns: ColumnsStudent(),
-        pageCount: Number(response?.meta?.last_page),
+        pageCount: Number(studentQuery?.response?.meta?.last_page) || 1,
     });
 
     // Handle change filter
@@ -96,7 +96,7 @@ function TableStudents() {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="default">Semua Kelas</SelectItem>
-                            {academic?.classes.map((cls) => (
+                            {academicQuery.data?.classes.map((cls) => (
                                 <SelectItem value={cls.name} key={cls.name}>
                                     {cls.name}
                                 </SelectItem>
@@ -111,7 +111,7 @@ function TableStudents() {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="default">Semua Jurusan</SelectItem>
-                            {academic?.majors.map((major) => (
+                            {academicQuery.data?.majors.map((major) => (
                                 <SelectItem value={major.short} key={major.name}>
                                     {major.name}
                                 </SelectItem>
@@ -131,8 +131,8 @@ function TableStudents() {
             <DataTableCustom
                 table={table}
                 title="Data Table Siswa"
-                description={`Berhasil mendapatkan data siswa berjumlah ${response?.meta?.total || 0} siswa`}
-                isLoading={isPending}
+                description={`Berhasil mendapatkan data siswa berjumlah ${studentQuery.response?.meta?.total || 0} siswa`}
+                isLoading={studentQuery.isPending}
                 toolbarItems={toolbarItems}
             />
         </main>

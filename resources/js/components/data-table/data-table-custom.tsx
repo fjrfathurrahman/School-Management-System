@@ -76,7 +76,7 @@ function DataTableCustom<TData>({
                     </div>
 
                     {/* Toolbar Section */}
-                    <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+                    <div className="flex flex-col gap-3 sm:flex-row lg:items-center">
                         {/* Column Toggle */}
                         {showColumnToggle && (
                             <DropdownMenu>

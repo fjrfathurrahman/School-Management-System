@@ -4,12 +4,14 @@ namespace App\Http\Controllers\User;
 
 use App\Helpers\ApiResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StudentRequest;
 use App\Http\Resources\StudentResource;
 use App\Models\User;
 use App\Models\User\Student;
 use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Str;
 
 class StudentController extends Controller
 {
@@ -88,7 +90,7 @@ class StudentController extends Controller
             // return response
             return ApiResponseHelper::success($response, 'Berhasil mengambil data siswa');
         } catch (\Throwable $th) {
-            return ApiResponseHelper::error('Gagal mengambil data siswa: ' . $th->getMessage());
+            return ApiResponseHelper::error('Terjadi kesalahan: ' . $th->getMessage());
         }
     }
 
@@ -99,68 +101,76 @@ class StudentController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(StudentRequest $request)
     {
         try {
-            // validate
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string',
-                'nis' => 'required|string|unique:students,nis',
-                'nisn' => 'required|string|unique:students,nisn',
-                'gender' => 'required|string',
-                'birth_place' => 'required|string',
-                'birth_date' => 'required|date',
-                'phone' => 'required|string',
-                'address' => 'required|string',
-                'religion' => 'required|string',
-                'avatar' => 'nullable|string',
-
-                'class_id' => 'nullable|exists:classes,id',
-                'major_id' => 'nullable|exists:majors,id',
-            ]);
-
-            // check validation
-            if ($validator->fails()) {
-                return redirect()->back()->withErrors($validator)->withInput();
-            }
-
-            // create data user
             $user = User::create([
-                'username' => 'student' . time(),
-                'email' => 'student' . time() . '@bppi.sch',
+                'username' => 'student_' . Str::random(6),
+                'email' => 'student_' . Str::random(6) . '@bppi.sch',
                 'password' => Hash::make('password'),
                 'user_type' => 'student',
             ]);
 
-            // role as student
             $user->assignRole('student');
 
-            // create data student
-            $user->student()->create([
-                'name' => $request->name,
-                'nis' => $request->nis,
-                'nisn' => $request->nisn,
-                'gender' => $request->gender,
-                'birth_place' => $request->birth_place,
-                'birth_date' => $request->birth_date,
-                'phone' => $request->phone,
-                'address' => $request->address,
-                'religion' => $request->religion,
-                'avatar' => $request->avatar,
+            $user->student()->create($request->validated());
 
-                'class_id' => $request->class_id,
-                'major_id' => $request->major_id
-            ]);
-
-            // create activity
             activity()
                 ->performedOn($user)
                 ->causedBy(auth()->user())
-                ->log('Created a new student' . $user->student->name);
+                ->log("Created a new student: {$user->student->name}");
 
             return redirect()->route('student.list')->with('success', 'Berhasil menambahkan data siswa.');
         } catch (\Throwable $th) {
-            return redirect()->back()->with('error', 'Gagal menambahkan data siswa: ' . $th->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
+        }
+    }
+
+    public function update(StudentRequest $request, String $id){
+        try {
+            
+            $student = Student::find($id);
+
+            if (!$student) {
+                return ApiResponseHelper::error('Siswa tidak ditemukan', 404);
+            }
+
+            $student->update($request->all());
+
+            activity()
+                ->causedBy(auth()->user())
+                ->log("Updated a student: {$student->name}");
+
+            return redirect()->route('student.detail', ['student' => $student->id])->with('success', 'Berhasil mengubah data siswa.');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
+        }
+    }
+
+    /**
+     * Delete the specified student.
+     *
+     * @param int $id ID Siswa
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroyApi($id)
+    {
+        try {
+            $student = Student::find($id);
+
+            if (!$student) {
+                return ApiResponseHelper::error('Siswa tidak ditemukan', 404);
+            }   
+
+            $student->delete();
+            
+            activity()
+                ->causedBy(auth()->user())
+                ->log("Deleted a student: {$student->name}");
+
+            return ApiResponseHelper::success([], 'Berhasil menghapus data siswa');
+        } catch (\Throwable $th) {
+            return ApiResponseHelper::error('Terjadi kesalahan: ' . $th->getMessage());
         }
     }
 }

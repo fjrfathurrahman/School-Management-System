@@ -1,5 +1,5 @@
 import { IPagination, IResponse, IStudent } from '@/types/response';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import { toast } from 'sonner';
 
@@ -9,7 +9,7 @@ interface ResponsseStudents {
     data: {
         data: IStudent[];
         meta: IPagination;
-    }
+    };
 }
 
 /**
@@ -34,9 +34,32 @@ function useGetStudents(searchParams?: Record<string, string> | null) {
 
     return {
         response: data?.data,
-        students: data?.data?.data ?? [],
+        data: data?.data?.data ?? [],
         ...rest,
     };
 }
 
-export { useGetStudents };
+/**
+ * Custom hook untuk menghapus data siswa berdasarkan id.
+ * Mengembalikan fungsi `mutateAsync` yang dapat digunakan untuk menghapus data,
+ * serta properti `isLoading` dan `isError` untuk mengetahui status dari proses penghapusan.
+ *
+ * @param {number} id - id data siswa yang akan dihapus
+ * @returns {Object} - objek yang berisi fungsi `mutateAsync` dan properti `isLoading` dan `isError`
+ */
+function useDeleteStudent(id: number) {
+    const studentsQuery = useGetStudents();
+
+    return useMutation<IResponse, AxiosError<IResponse>>({
+        mutationFn: async () => (await axios.delete(`/api/v1/students/${id}`)).data,
+        onError: (e) => toast.error(e.response?.data?.message ?? 'Terjadi kesalahan'),
+        onSuccess: (data) => {
+            toast.success(data.message ?? 'Berhasil menghapus data siswa');
+            studentsQuery.refetch();
+
+            window.location.href = '/dashboard/siswa';
+        },
+    });
+}
+
+export { useDeleteStudent, useGetStudents };
