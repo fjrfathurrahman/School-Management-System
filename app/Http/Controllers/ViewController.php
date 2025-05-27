@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\StudentResource;
 use App\Models\User\Student;
+use App\Models\User\Teachers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -40,5 +41,11 @@ class ViewController extends Controller
         return Inertia::render('admin/student/DetailStudent', [
             'response' => new StudentResource($student),
         ]);
+    }
+
+    
+    public function teacherList(Request $request)
+    {
+        return Inertia::render('admin/teacher/ListTeacher');
     }
 }

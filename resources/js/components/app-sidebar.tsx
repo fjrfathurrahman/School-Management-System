@@ -46,8 +46,8 @@ const data = {
           url: "/dashboard/siswa",
         },
         {
-          title: "Starred",
-          url: "#",
+          title: "Guru",
+          url: "/dashboard/guru",
         },
         {
           title: "Settings",

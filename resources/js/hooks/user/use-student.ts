@@ -1,4 +1,4 @@
-import { IPagination, IResponse, IStudent } from '@/types/response';
+import { IPagination, IResponse, IStudent, ITeacher } from '@/types/response';
 import { useQuery } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import { toast } from 'sonner';
@@ -11,7 +11,6 @@ interface ResponsseStudents {
         meta: IPagination;
     }
 }
-
 /**
  * Custom hook untuk mengambil data student dari API.
  * Mendukung searchParams sebagai dependency agar query bisa re-fetch saat berubah.

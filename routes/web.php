@@ -11,6 +11,9 @@ Route::get('/', [ViewController::class, 'home'])->name('home');
 Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [ViewController::class, 'dashboard'])->name('dashboard');
 
+    // Teachers
+    Route::get('/guru', [ViewController::class, 'teacherList'])->name('teacher.list');
+
     // Students
     Route::get('/siswa', [ViewController::class, 'studentList'])->name('student.list');
     Route::get('/siswa/{student}', [ViewController::class, 'studentDetail'])->name('student.detail');

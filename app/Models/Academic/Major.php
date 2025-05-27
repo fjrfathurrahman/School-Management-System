@@ -3,6 +3,7 @@
 namespace App\Models\Academic;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Academic\HomeroomTeacher;
 
 class Major extends Model
 {
@@ -17,5 +18,10 @@ class Major extends Model
     public function classes()
     {
         return $this->hasMany(Classes::class);
+    }
+
+    public function majorClasses()
+    {
+        return $this->hasMany(HomeroomTeacher::class);
     }
 }

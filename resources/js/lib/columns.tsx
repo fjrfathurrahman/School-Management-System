@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/badge';
-import { IStudent } from '@/types/response';
+import { IStudent, ITeacher } from '@/types/response';
 import { ColumnDef } from '@tanstack/react-table';
 import { Link } from 'react-router-dom';
 
@@ -71,3 +71,57 @@ export const ColumnsStudent = () =>
             },
         },
     ] as ColumnDef<IStudent>[];
+
+export const ColumnsTeacher = () =>
+    [
+        {
+            id: 'ID',
+            accessorKey: 'id',
+            header: 'ID',
+            cell: ({ row }) => row.index + 1,
+        },
+        {
+            id: 'NIP',
+            accessorKey: 'nip',
+            header: 'NIP',
+            cell: ({ row }) => <div className="font-mono text-sm">{row.original.nip}</div>,
+        },
+        {
+            id: 'name',
+            accessorKey: 'name',
+            header: 'Nama Lengkap',
+            cell: ({ row }) => (
+                <a href={`/dashboard/guru/${row.original.id}`} className="font-medium underline underline-offset-4">
+                    {row.original.name}
+                </a>
+            ),
+        },
+        {
+            id: 'Email',
+            header: 'Email',
+            cell: ({ row }) => <div className="text-sm">{row.original.user.email}</div>,
+        },
+        {
+            id: 'Phone',
+            header: 'No. Telepon',
+            cell: ({ row }) => (
+                <Link
+                    to={`https://wa.me/${row.original.phone_number}`}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    className="text-sm underline underline-offset-4"
+                >
+                    {row.original.phone_number}
+                </Link>
+            ),
+        },
+        {
+            id: 'Jenis Kelamin',
+            accessorKey: 'gender',
+            header: 'Jenis Kelamin',
+            cell: ({ row }) => {
+                const colors = row.original.gender === 'Perempuan' ? 'bg-pink-500/10 text-pink-500' : 'bg-blue-500/10 text-blue-500';
+                return <div className={`w-max rounded px-2 py-0.5 text-sm ${colors}`}>{row.original.gender}</div>;
+            },
+        },
+    ] as ColumnDef<ITeacher>[];

@@ -78,3 +78,24 @@ export interface IPagination {
     to: number;
     total: number;
 }
+
+export interface ITeacher {
+    id: number;
+    nip: string;
+    name: string;
+    phone_number: string | null;
+    address: string | null;
+    entry_date: string | null;
+    date_of_birth: string | null;
+    place_of_birth: string | null;
+    education: string | null;
+    position: string | null;
+    status: string;
+    gender: string | null;
+    avatar: string | null;
+
+    user: IUser;
+
+    created_at: string;
+    updated_at: string;
+}
