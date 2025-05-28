@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\User\StudentController;
+use App\Http\Controllers\User\TeacherController;
 use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,11 @@ Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () 
 
 // Routes Action for role admin
 Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
+
+    // Routes for action teacher (CRUD)
+    Route::resource('teachers', TeacherController::class)->names('teacher')->only(['store', 'update', 'destroy']);
+
+    // Routes for action student (CRUD)
     Route::resource('students', StudentController::class)->names('students')->only(['store', 'update', 'destroy']);
 });
 

@@ -2,10 +2,8 @@ import { DataTableCustom, ToolbarItem } from '@/components/data-table/data-table
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { FormAddStudent } from '@/contents/student/FormStudent';
+import { FormAddTeacher } from '@/contents/teachers/FormTeacher';
 import { useDataTable } from '@/hooks/use-data-table';
-import { useGetAcademic } from '@/hooks/use-get';
 import { useGetTeachers } from '@/hooks/user/use-teacher';
 import { ColumnsTeacher } from '@/lib/columns';
 import { ArrowDownToLine, FileSpreadsheet, Upload, UserPlus } from 'lucide-react';
@@ -63,12 +61,12 @@ function TableTeachers() {
                 },
             ],
         },
-        // {
-        //     component: 'sheet',
-        //     icon: <UserPlus />,
-        //     title: 'Tambah Guru',
-        //     // content: <FormAddStudent />,
-        // },
+        {
+            component: 'sheet',
+            icon: <UserPlus />,
+            title: 'Tambah Guru',
+            content: <FormAddTeacher />,
+        },
     ];
 
     return (
@@ -87,28 +85,6 @@ function TableTeachers() {
                         value={filters.search}
                         onChange={(e) => handleFilterChange('search', e.target.value)}
                     />
-
-                    {/* Select Kelas */}
-                    <Select value={filters.class} onValueChange={(val) => handleFilterChange('class', val === 'default' ? '' : val)}>
-                        <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Kelas" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="default">Semua Kelas</SelectItem>
-                            
-                        </SelectContent>
-                    </Select>
-
-                    {/* Select Jurusan */}
-                    <Select value={filters.major} onValueChange={(val) => handleFilterChange('major', val === 'default' ? '' : val)}>
-                        <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Jurusan" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="default">Semua Jurusan</SelectItem>
-                            
-                        </SelectContent>
-                    </Select>
 
                     {/* Export berdasarkan filter */}
                     <Button>

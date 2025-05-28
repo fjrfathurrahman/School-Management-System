@@ -8,6 +8,7 @@ use App\Http\Resources\TeacherResource;
 use App\Models\User;
 use App\Models\User\Teachers;
 use Hash;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -45,7 +46,7 @@ class TeacherController extends Controller
 
             // check if data is empty
             if ($teachers->isEmpty()) {
-                return ApiResponseHelper::error('Data siswa tidak ditemukan', 404);
+                return ApiResponseHelper::error('Data Guru tidak ditemukan', 404);
             }
 
             // prepare response
@@ -73,19 +74,70 @@ class TeacherController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $validator = validator($request->all(), [
+                'nip' => ['required', 'string', 'max:255'],
+                'name' => ['required', 'string', 'max:255'],
+                'phone_number' => ['nullable', 'string', 'max:255'],
+                'address' => ['nullable', 'string', 'max:255'],
+                'entry_date' => ['nullable', 'date', 'max:255'],
+                'date_of_birth' => ['nullable', 'date', 'max:255'],
+                'place_of_birth' => ['nullable', 'string', 'max:255'],
+                'education' => ['nullable', 'string', 'max:255'],
+                'position' => ['nullable', 'string', 'max:255'],
+                'status' => ['required', 'in:aktif,nonaktif'],
+                'gender' => ['nullable', 'in:female,male'],
+                'avatar' => ['nullable', 'string', 'max:255'],
+            ]);
+
+            // check validation
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+
+            // create data user
+            $user = User::create([
+                'username' => 'teacher' . time(),
+                'email' => 'teacher' . time() . '@bppi.sch',
+                'password' => Hash::make('password'),
+                'user_type' => 'teacher',
+            ]);
+
+            // Assign the role of teacher to the user
+            $user->assignRole('teacher');
+
+
+            Teachers::create([
+                'user_id' => $user->id,
+                'nip' => $request->nip,
+                'name' => $request->name,
+                'phone_number' => $request->phone_number,
+                'address' => $request->address,
+                'entry_date' => $request->entry_date,
+                'date_of_birth' => $request->date_of_birth,
+                'place_of_birth' => $request->place_of_birth,
+                'education' => $request->education,
+                'position' => $request->position,
+                'status' => $request->status,
+                'gender' => $request->gender,
+                'avatar' => $request->avatar,
+            ]);
+
+
+            //create Activity
+            activity()
+                ->performedOn($user)
+                ->causedBy(auth()->user())
+                ->log('Created new teacher' . $user->teacher->name);
+
+            return redirect()->route('teacher.list')->with('success', 'Berhasil menambahkan data Guru.');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Gagal menambahkan data Guru: ' . $th->getMessage());
+        }
     }
 
     /**
