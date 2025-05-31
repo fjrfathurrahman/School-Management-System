@@ -7,7 +7,7 @@ import InputError from '../input-error';
 interface FormInputRenderProps {
   component: 'input' | 'select' | 'textarea';
   label: string;
-  value: string | number;
+  value: string | number | null | boolean;
   onChange: (value: string | number | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | any) => void;
   className?: string;
   type?: string;
@@ -35,7 +35,7 @@ export function FormInputRender({
       {component === 'input' && (
         <Input
           type={type}
-          value={value.toString()}
+          value={value?.toString()}
           onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
           className={className}
           placeholder={placeholder}
@@ -43,7 +43,7 @@ export function FormInputRender({
         />
       )}
       {component === 'select' && (
-        <Select value={value.toString()} onValueChange={(val) => onChange(val)} disabled={disabled}>
+        <Select value={value?.toString()} onValueChange={(val) => onChange(val)} disabled={disabled}>
           <SelectTrigger className={className || 'w-full'}>
             <SelectValue />
           </SelectTrigger>
@@ -61,7 +61,7 @@ export function FormInputRender({
       )}
       {component === 'textarea' && (
         <Textarea
-          value={value.toString()}
+          value={value?.toString()}
           onChange={onChange as React.ChangeEventHandler<HTMLTextAreaElement>}
           className={className}
           placeholder={placeholder}

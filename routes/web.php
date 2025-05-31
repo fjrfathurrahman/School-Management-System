@@ -30,6 +30,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
 
     // Routes for action student (CRUD)
     Route::resource('students', StudentController::class)->names('students')->only(['store', 'update', 'destroy']);
+
 });
 
 require __DIR__.'/settings.php';

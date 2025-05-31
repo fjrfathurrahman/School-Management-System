@@ -3,10 +3,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { FormInputRender } from '@/components/ui/form';
 import { SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useGetAcademic } from '@/hooks/use-get';
+import { useGetStudents } from '@/hooks/user/use-student';
 import { cn } from '@/lib/utils';
 import { IStudent } from '@/types/response';
 import { useForm } from '@inertiajs/react';
-import { useQueryClient } from '@tanstack/react-query';
 import { FileText, LoaderCircle, Save } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -14,27 +14,14 @@ import { toast } from 'sonner';
  * * FormAddstudent adalah komponen untuk menambahkan informasi siswa baru ke sistem.
  */
 function FormAddStudent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-    // query client untuk refetch
-    const query = useQueryClient();
+    // ambil data siswa
+    const studentQuery = useGetStudents();
 
     // ambil data akademik
-    const { academic } = useGetAcademic();
+    const academicQuery = useGetAcademic();
 
     // hook form untuk menambahkan siswa
-    const { setData, processing, post, data, errors } = useForm({
-        nis: 'nis01',
-        nisn: 'nisn01',
-        name: 'Test Name',
-        phone: '0888888888',
-        gender: 'male',
-        birth_place: 'Bandung',
-        birth_date: '2019-01-01',
-        address: 'lorem ipsum dolor sit amet',
-        religion: 'Islam',
-        avatar: null,
-        class_id: 1,
-        major_id: 1,
-    });
+    const { setData, processing, post, data, errors } = useForm();
 
     // hook untuk menambahkan siswa
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
@@ -43,10 +30,13 @@ function FormAddStudent({ className, ...props }: React.HTMLAttributes<HTMLDivEle
 
         // kirim request
         post(route('students.store'), {
-            onError: () => toast.error('Gagal menambahkan siswa'),
+            onError: (error) => {
+                console.log(error);
+                toast.error('Gagal menambahkan siswa');
+            },
             onSuccess: () => {
                 toast.success('Berhasil menambahkan siswa');
-                query.refetchQueries({ queryKey: ['students'] }); // refetch data siswa
+                studentQuery.refetch();
             },
         });
     };
@@ -127,7 +117,7 @@ function FormAddStudent({ className, ...props }: React.HTMLAttributes<HTMLDivEle
             onChange: (value: string) => setData('class_id', parseInt(value)),
             errors: errors?.class_id,
             options:
-                academic?.classes.map((classroom) => ({
+                academicQuery.data?.classes.map((classroom) => ({
                     value: classroom.id.toString(),
                     label: classroom.name,
                 })) || [],
@@ -139,7 +129,7 @@ function FormAddStudent({ className, ...props }: React.HTMLAttributes<HTMLDivEle
             onChange: (value: string) => setData('major_id', parseInt(value)),
             errors: errors?.major_id,
             options:
-                academic?.majors.map((major) => ({
+                academicQuery.data?.majors.map((major) => ({
                     value: major.id.toString(),
                     label: major.name,
                 })) || [],
@@ -150,14 +140,6 @@ function FormAddStudent({ className, ...props }: React.HTMLAttributes<HTMLDivEle
             value: data.address ?? '',
             onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => setData('address', e.target.value),
             errors: errors?.address,
-        },
-        {
-            component: 'input' as const,
-            label: 'Tanggal Lahir',
-            value: data.birth_date ?? '',
-            onChange: (e: React.ChangeEvent<HTMLInputElement>) => setData('birth_date', e.target.value),
-            type: 'date',
-            errors: errors?.birth_date,
         },
     ];
 
@@ -185,7 +167,7 @@ function FormAddStudent({ className, ...props }: React.HTMLAttributes<HTMLDivEle
                         <CardContent>
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 {inputFields.map((field, index) => (
-                                    <FormInputRender key={index} {...field} />
+                                    <FormInputRender key={index} {...field} value={field.value as string | number | null} />
                                 ))}
                             </div>
                             <Button className="mt-6 w-full" type="submit" disabled={processing}>
@@ -204,30 +186,39 @@ interface FormUpdateStudentProps extends React.HTMLAttributes<HTMLDivElement> {
     dataDefault: IStudent;
 }
 
-function FormUpdateStudent({ className, children, isDisabled, ...props }: FormUpdateStudentProps) {
+function FormUpdateStudent({ className, children, dataDefault, isDisabled, ...props }: FormUpdateStudentProps) {
     // ambil data akademik
-    const { academic } = useGetAcademic();
+    const academicQuery = useGetAcademic();
 
-    // hook form untuk menambahkan siswa
-    const { setData, processing, data, errors } = useForm({
-        nis: 'nis01',
-        nisn: 'nisn01',
-        name: 'Test Name',
-        phone: '0888888888',
-        gender: 'male',
-        birth_place: 'Bandung',
-        birth_date: '2019-01-01',
-        address: 'lorem ipsum dolor sit amet',
-        religion: 'Islam',
+    // hook form untuk update siswa
+    const { setData, processing, data, errors, put } = useForm({
+        nis: dataDefault.nis,
+        nisn: dataDefault.nisn,
+        name: dataDefault.name,
+        phone: dataDefault.phone,
+        gender: dataDefault.gender === 'Perempuan' ? 'female' : 'male',
+        birth_place: dataDefault.birth_place,
+        birth_date: dataDefault.birth_date,
+        address: dataDefault.address,
+        religion: dataDefault.religion,
         avatar: null,
-        class_id: 1,
-        major_id: 1,
+        class_id: dataDefault?.classroom?.class_id,
+        major_id: dataDefault?.major?.major_id,
     });
 
     // hook untuk update siswa
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
         console.log(data);
+
+        // kirim request
+        put(route('students.update', dataDefault.id), {
+            onSuccess: () => toast.success('Berhasil mengubah data siswa'),
+            onError: (error) => {
+                console.log(error);
+                toast.error('Gagal mengubah data siswa');
+            },
+        });
     };
 
     // input fields yang akan ditampilkan
@@ -314,7 +305,7 @@ function FormUpdateStudent({ className, children, isDisabled, ...props }: FormUp
             onChange: (value: string) => setData('class_id', parseInt(value)),
             errors: errors?.class_id,
             options:
-                academic?.classes.map((classroom) => ({
+                academicQuery.data?.classes.map((classroom) => ({
                     value: classroom.id.toString(),
                     label: classroom.name,
                 })) || [],
@@ -327,7 +318,7 @@ function FormUpdateStudent({ className, children, isDisabled, ...props }: FormUp
             onChange: (value: string) => setData('major_id', parseInt(value)),
             errors: errors?.major_id,
             options:
-                academic?.majors.map((major) => ({
+                academicQuery.data?.majors.map((major) => ({
                     value: major.id.toString(),
                     label: major.name,
                 })) || [],
@@ -360,7 +351,7 @@ function FormUpdateStudent({ className, children, isDisabled, ...props }: FormUp
                         <FormInputRender key={index} {...field} />
                     ))}
                 </div>
-                <div className='flex items-center gap-2 mt-6'>
+                <div className="mt-6 flex items-center gap-2">
                     <Button className="bg-emerald-600 hover:bg-emerald-700" type="submit" disabled={processing || isDisabled}>
                         <Save className="mr-2 h-4 w-4" />
                         {processing ? 'Loading...' : 'Simpan'}

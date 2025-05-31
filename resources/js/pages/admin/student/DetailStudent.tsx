@@ -30,6 +30,8 @@ export default function DetailStudentPage() {
     const student = useMemo(() => response?.data || {}, [response]);
 
     // return <pre>{JSON.stringify(student, null, 2)}</pre>
+
+    console.log(student)
     
     return (
         <DashboardLayout breadcrumbs={breadcrumb}>
