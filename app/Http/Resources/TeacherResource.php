@@ -38,3 +38,4 @@ class TeacherResource extends JsonResource
         
     }
 }
+

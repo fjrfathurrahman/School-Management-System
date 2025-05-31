@@ -2,7 +2,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { OverviewChart } from '@/contents/student/OverviewStudent';
 import { TableTeachers } from '@/contents/teachers/TableTeacher';
 import DashboardLayout, { Breadcrumb } from '@/layouts/dashboard-layout';
-import { Calendar, GraduationCap, TrendingUp, Users } from 'lucide-react';
+import { Calendar, BookUser, TrendingUp, Users } from 'lucide-react';
+import  ListHomeRoomTeacher from '@/pages/admin/academic/ListHomeRoomTeacher';
 
 const breadcrumb: Breadcrumb[] = [
     {
@@ -30,8 +31,8 @@ export default function ListTeacherPage() {
             <Tabs defaultValue="teachers" className="space-y-4">
                 <TabsList className="grid w-full grid-cols-4 lg:w-[600px]">
                     <TabsTrigger value="overview" className="gap-2">
-                        <GraduationCap />
-                        Ringkasan
+                        <BookUser />
+                        Wali Kelas
                     </TabsTrigger>
                     <TabsTrigger value="teachers" className="gap-2">
                         <Users />
@@ -50,7 +51,7 @@ export default function ListTeacherPage() {
                 
                 {/* tabs content */}
                 <TabsContent value="overview">
-                    <OverviewChart />
+                    <ListHomeRoomTeacher/>
                 </TabsContent>
                 <TabsContent value="teachers">
                     <TableTeachers/>

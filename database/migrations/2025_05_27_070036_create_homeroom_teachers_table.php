@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('classes_id')->constrained('classes')->cascadeOnDelete();
             $table->foreignId('major_id')->constrained('majors')->cascadeOnDelete();
             $table->foreignId('teacher_id')->constrained('teachers')->cascadeOnDelete();
-            $table->year('tahun_ajaran');
+            $table->year('school_year');
             $table->string('semester');
             $table->timestamps();
         });

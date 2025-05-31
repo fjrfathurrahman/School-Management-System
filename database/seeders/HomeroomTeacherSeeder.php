@@ -20,15 +20,15 @@ class HomeroomTeacherSeeder extends Seeder
         $classes = Classes::all();
         $majors = Major::all();
 
-        for ($i=0; $i < 10; $i++) { 
-             HomeroomTeacher::create([
-                'teacher_id'    => $teachers->random()->id,
-                'classes_id'    => $classes->random()->id,
-                'major_id'      => $majors->random()->id,
-                'tahun_ajaran'  => fake()->year(),
-                'semester'      => fake()->randomElement(['Ganjil', 'Genap']),
+        for ($i = 0; $i < 10; $i++) {
+            HomeroomTeacher::create([
+                'teacher_id' => $teachers->random()->id,
+                'classes_id' => $classes->random()->id,
+                'major_id' => $majors->random()->id,
+                'school_year' => fake()->year(),
+                'semester' => fake()->randomElement(['Ganjil', 'Genap']),
             ]);
         }
-        
+
     }
 }

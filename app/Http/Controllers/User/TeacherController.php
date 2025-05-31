@@ -31,7 +31,6 @@ class TeacherController extends Controller
                 });
             }
 
-
             // allow sorting by specified fields
             $allowedSortFields = ['name', 'nip', 'created_at'];
             $sortBy = in_array($request->input('sort_by'), $allowedSortFields) ? $request->input('sort_by') : 'name';

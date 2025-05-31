@@ -18,8 +18,12 @@ class ViewController extends Controller
     }
 
 
-    // View Page untuk admin 
-
+    /**
+     * View Page untuk admin
+     *
+     * Halaman-halaman yang akan di akses oleh admin
+     * dan hanya dapat di akses oleh admin
+     */
 
     // Dashboard
     public function dashboard()
@@ -44,8 +48,15 @@ class ViewController extends Controller
     }
 
     
+    // List Teacher
     public function teacherList(Request $request)
     {
         return Inertia::render('admin/teacher/ListTeacher');
+    }
+
+    // List HomeRoom Teacher
+    public function homeRoomTeacher(Request $request)
+    {
+        return Inertia::render('admin/academic/ListHomeRoomTeacher');
     }
 }

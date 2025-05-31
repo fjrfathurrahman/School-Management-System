@@ -1,11 +1,15 @@
 <?php
 
+use App\Http\Controllers\Academic\HomeRoomController;
 use App\Http\Controllers\User\StudentController;
 use App\Http\Controllers\User\TeacherController;
 use Illuminate\Support\Facades\Route;
 
 // API
 Route::prefix('v1')->group(function () {
+
+    // HomeRoom
+    Route::get('/homeRoom', [HomeRoomController::class, 'indexApi'])->name('homeRoom.index');
     
     // Teachers
     Route::get('/teachers', [TeacherController::class, 'indexApi'])->name('teachers.index');

@@ -99,3 +99,17 @@ export interface ITeacher {
     created_at: string;
     updated_at: string;
 }
+
+export interface IHomeRoom {
+  students_count: ReactNode;
+  id: number | string;
+  school_year: string;
+  semester: string;
+  
+  class: IClass;
+  students: IStudent[];
+  teacher: ITeacher;
+  major: IMajor;
+
+  students_count: number;
+};
