@@ -1,5 +1,5 @@
 import { IPagination, IResponse, ITeacher } from '@/types/response';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import { toast } from 'sonner';
 
@@ -50,4 +50,20 @@ function useGetTeachers(searchParams?: Record<string, string> | null) {
     };
 }
 
-export {useGetTeachers};
+function useDeleteTeacher(id: number) {
+    const teachersQuery = useGetTeachers();
+
+    return useMutation<IResponse, AxiosError<IResponse>>({
+        mutationFn: async () => (await axios.delete(`/api/v1/teachers/${id}`)).data,
+        onError: (e) => toast.error(e.response?.data?.message ?? 'Terjadi kesalahan'),
+        onSuccess: (data) => {
+            toast.success(data.message ?? 'Berhasil menghapus data siswa');
+            teachersQuery.refetch();
+
+            window.location.href = '/dashboard/siswa';
+        },
+    });
+}
+
+
+export {useGetTeachers, useDeleteTeacher};

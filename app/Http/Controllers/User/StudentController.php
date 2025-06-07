@@ -126,7 +126,7 @@ class StudentController extends Controller
         }
     }
 
-    public function update(StudentRequest $request, String $id){
+    public function updateApi(StudentRequest $request, String $id){
         try {
             
             $student = Student::find($id);

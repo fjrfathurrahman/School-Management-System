@@ -139,35 +139,51 @@ class TeacherController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $teacher = Teachers::find($id);
+
+            if (!$teacher) {
+                return ApiResponseHelper::error('data guru tidak ditemukan', 404);
+            }
+
+            $teacher->update($request->all());
+
+            activity()
+                ->causedBy(auth()->user())
+                ->log("Update a teacher: {$teacher->name}");
+
+            return redirect()->route('teacher.detail', ['teacher' => $teacher->id])->with('success', 'Berhasil mengubah data guru.');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroyApi($id)
     {
-        //
+        try {
+            $teacher = Teachers::find($id);
+
+            if (!$teacher) {
+                return ApiResponseHelper::error('Guru tidak ditemukan', 404);
+            }
+
+            $teacher->delete();
+            activity()
+                ->causedBy(auth()->user())
+                ->log("Deleted a teacher: {$teacher->name}");
+
+            return ApiResponseHelper::success([], 'Berhasil menghapus data huru');
+        } catch (\Throwable $th) {
+            return ApiResponseHelper::error('Terjadi kesalahan: ' . $th->getMessage());
+        }
     }
 }

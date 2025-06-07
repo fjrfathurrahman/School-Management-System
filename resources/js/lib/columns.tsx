@@ -60,7 +60,7 @@ export const ColumnsStudent = () =>
                     target="_blank"
                     className="text-sm underline underline-offset-4"
                 >
-                    {/* {row.original.phone} */} cocote
+                    {row.original.phone} 
                 </Link>
             ),
         },

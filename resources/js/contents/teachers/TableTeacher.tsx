@@ -81,7 +81,7 @@ function TableTeachers() {
                 <CardContent className="grid items-center gap-4 lg:grid-cols-4">
                     {/* Input Pencarian */}
                     <Input
-                        placeholder="Cari berdasarkan Nama atau NISN"
+                        placeholder="Cari berdasarkan Nama atau NIP"
                         value={filters.search}
                         onChange={(e) => handleFilterChange('search', e.target.value)}
                     />

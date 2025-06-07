@@ -13,12 +13,15 @@ Route::prefix('v1')->group(function () {
     
     // Teachers
     Route::get('/teachers', [TeacherController::class, 'indexApi'])->name('teachers.index');
+    Route::put('/teachers/{id}', [TeacherController::class, 'updateApi'])->name('teachers.update');
+    Route::delete('/teachers/{id}', [TeacherController::class, 'destroyApi'])->name('teachers.detroy');
+
 
     // Students 
     // NOTE: perlu diperbaiki url
     Route::get('/students', [StudentController::class, 'indexApi'])->name('students.index');
     Route::delete('/students/{id}', [StudentController::class, 'destroyApi'])->name('students.destroy');
-    Route::put('/students/{id}', [StudentController::class, 'destroyApi'])->name('students.update');
+    Route::put('/students/{id}', [StudentController::class, 'updateApi'])->name('students.update');
 
     // Academic
     // NOTE: perlu diperbaiki dibuat di controller

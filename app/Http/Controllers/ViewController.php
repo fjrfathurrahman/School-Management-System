@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\StudentResource;
+use App\Http\Resources\TeacherResource;
 use App\Models\User\Student;
+use App\Models\Academic\HomeroomTeacher;
 use App\Models\User\Teachers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -47,11 +49,22 @@ class ViewController extends Controller
         ]);
     }
 
-    
+
     // List Teacher
     public function teacherList(Request $request)
     {
         return Inertia::render('admin/teacher/ListTeacher');
+    }
+
+    // Detail Teacher
+    public function teacherDetail(Teachers $teachers)
+    {
+        $teachers = Teachers::fullRelationship()->findOrFail($teachers->id);
+
+        return Inertia::render('admin/teacher/DetailTeacher', [
+            'response' => new TeacherResource($teachers),
+        ]);
+
     }
 
     // List HomeRoom Teacher

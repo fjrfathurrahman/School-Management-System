@@ -33,7 +33,7 @@ class TeacherResource extends JsonResource
                 'username' => $this->user->username,
                 'email' => $this->user->email,
                 'user_type' => $this->user->user_type
-            ]
+            ],
         ];
         
     }

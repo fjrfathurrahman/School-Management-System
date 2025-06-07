@@ -4,7 +4,7 @@ import { FormInputRender } from '@/components/ui/form';
 import { SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useGetAcademic } from '@/hooks/use-get';
 import { cn } from '@/lib/utils';
-import { IStudent } from '@/types/response';
+import { IStudent, ITeacher } from '@/types/response';
 import { useForm } from '@inertiajs/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { FileText, LoaderCircle, Save } from 'lucide-react';
@@ -120,7 +120,7 @@ function FormAddTeacher({ className, ...props }: React.HTMLAttributes<HTMLDivEle
             onChange: (e: React.ChangeEvent<HTMLInputElement>) => setData('education', e.target.value),
             type: 'text',
             errors: errors?.education,
-            
+
         },
         {
             component: 'input' as const,
@@ -197,24 +197,24 @@ function FormAddTeacher({ className, ...props }: React.HTMLAttributes<HTMLDivEle
 
 interface FormUpdateTeacherProps extends React.HTMLAttributes<HTMLDivElement> {
     isDisabled?: boolean;
-    dataDefault: IStudent;
+    dataDefault: ITeacher;
 }
 
-function FormUpdateTeacher({ className, children, isDisabled, ...props }: FormUpdateTeacherProps) {
+function FormUpdateTeacher({ className, children, dataDefault, isDisabled, ...props }: FormUpdateTeacherProps) {
 
-    // hook form untuk menambahkan siswa
-    const { setData, processing, data, errors } = useForm({
-        nip: '12345678',
-        name: 'John Doe',
-        phone_number: '081234567890',
-        address: '123 Main St',
-        entry_date: '2023-01-01',
-        date_of_birth: '1990-01-01',
-        place_of_birth: 'Jakarta',
-        education: 'S1 Pendidikan',
-        position: 'Guru',
-        status: 'aktif',
-        gender: 'male',
+    // hook form untuk update siswa
+    const { setData, processing, data, errors, put } = useForm({
+        nip: dataDefault.nip,
+        name: dataDefault.name,
+        phone_number: dataDefault.phone_number,
+        address: dataDefault.address,
+        entry_date: dataDefault.entry_date,
+        date_of_birth: dataDefault.date_of_birth,
+        place_of_birth: dataDefault.place_of_birth,
+        education: dataDefault.education,
+        position: dataDefault.position,
+        status: dataDefault.status,
+        gender: dataDefault.gender,
         avatar: null,
     });
 
@@ -222,6 +222,15 @@ function FormUpdateTeacher({ className, children, isDisabled, ...props }: FormUp
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
         console.log(data);
+
+        // kirim request
+        put(route('teachers.update', dataDefault.id), {
+            onSuccess: () => toast.success('Berhasil mengubah data guru'),
+            onError: (error) => {
+                console.log(error);
+                toast.error('Gagal mengubah data guru');
+            },
+        });
     };
 
     // input fields yang akan ditampilkan
@@ -233,7 +242,8 @@ function FormUpdateTeacher({ className, children, isDisabled, ...props }: FormUp
             onChange: (e: React.ChangeEvent<HTMLInputElement>) => setData('nip', e.target.value),
             type: 'text',
             errors: errors?.nip,
-            disabled: isDisabled,
+            disable: isDisabled,
+
         },
         {
             component: 'input' as const,
@@ -242,7 +252,7 @@ function FormUpdateTeacher({ className, children, isDisabled, ...props }: FormUp
             onChange: (e: React.ChangeEvent<HTMLInputElement>) => setData('name', e.target.value),
             type: 'text',
             errors: errors?.name,
-            disabled: isDisabled,
+            disable: isDisabled,
         },
         {
             component: 'input' as const,
@@ -251,7 +261,7 @@ function FormUpdateTeacher({ className, children, isDisabled, ...props }: FormUp
             onChange: (e: React.ChangeEvent<HTMLInputElement>) => setData('phone_number', e.target.value),
             type: 'text',
             errors: errors?.phone_number,
-            disabled: isDisabled,
+            disable: isDisabled,
         },
         {
             component: 'input' as const,
@@ -260,7 +270,7 @@ function FormUpdateTeacher({ className, children, isDisabled, ...props }: FormUp
             onChange: (e: React.ChangeEvent<HTMLInputElement>) => setData('address', e.target.value),
             type: 'text',
             errors: errors?.address,
-            disabled: isDisabled,
+            disable: isDisabled,
         },
         {
             component: 'input' as const,
@@ -269,7 +279,7 @@ function FormUpdateTeacher({ className, children, isDisabled, ...props }: FormUp
             onChange: (e: React.ChangeEvent<HTMLInputElement>) => setData('entry_date', e.target.value),
             type: 'date',
             errors: errors?.entry_date,
-            disabled: isDisabled,
+            disable: isDisabled,
         },
         {
             component: 'input' as const,
@@ -278,7 +288,7 @@ function FormUpdateTeacher({ className, children, isDisabled, ...props }: FormUp
             onChange: (e: React.ChangeEvent<HTMLInputElement>) => setData('date_of_birth', e.target.value),
             type: 'date',
             errors: errors?.date_of_birth,
-            disabled: isDisabled,
+            disable: isDisabled,
         },
         {
             component: 'input' as const,
@@ -287,25 +297,25 @@ function FormUpdateTeacher({ className, children, isDisabled, ...props }: FormUp
             onChange: (e: React.ChangeEvent<HTMLInputElement>) => setData('place_of_birth', e.target.value),
             type: 'text',
             errors: errors?.place_of_birth,
-            disabled: isDisabled,
+            disable: isDisabled,
         },
         {
-            component: 'select' as const,
+            component: 'input' as const,
             label: 'Pendidikan',
             value: data.education,
-            onChange: (value: string) => setData('education', value),
+            onChange: (e: React.ChangeEvent<HTMLInputElement>) => setData('education', e.target.value),
             type: 'text',
             errors: errors?.education,
-            disabled: isDisabled,
+            disable: isDisabled,
         },
         {
-            component: 'select' as const,
+            component: 'input' as const,
             label: 'Jabatan',
             value: data.position,
-            onChange: (value: string) => setData('position', value),
+            onChange: (e: React.ChangeEvent<HTMLInputElement>) => setData('position', e.target.value),
             type: 'text',
             errors: errors?.position,
-            disabled: isDisabled,
+            disable: isDisabled,
         },
         {
             component: 'select' as const,
@@ -314,10 +324,10 @@ function FormUpdateTeacher({ className, children, isDisabled, ...props }: FormUp
             onChange: (value: string) => setData('status', value),
             options: [
                 { value: 'aktif', label: 'Aktif' },
-                { value: 'nonaktif', label: 'Tidak Aktif' },
+                { value: 'tidak aktif', label: 'Tidak Aktif' },
             ],
             errors: errors?.status,
-            disabled: isDisabled,
+            disable: isDisabled,
         },
         {
             component: 'select' as const,
@@ -326,9 +336,10 @@ function FormUpdateTeacher({ className, children, isDisabled, ...props }: FormUp
             onChange: (value: string) => setData('gender', value),
             options: [
                 { value: 'male', label: 'Laki-laki' },
+                { value: 'female', label: 'Perempuan' },
             ],
             errors: errors?.gender,
-            disabled: isDisabled,
+            disable: isDisabled,
         },
     ];
 
@@ -340,7 +351,7 @@ function FormUpdateTeacher({ className, children, isDisabled, ...props }: FormUp
                         <FormInputRender key={index} {...field} />
                     ))}
                 </div>
-                <div className='flex items-center gap-2 mt-6'>
+                <div className="mt-6 flex items-center gap-2">
                     <Button className="bg-emerald-600 hover:bg-emerald-700" type="submit" disabled={processing || isDisabled}>
                         <Save className="mr-2 h-4 w-4" />
                         {processing ? 'Loading...' : 'Simpan'}

@@ -15,6 +15,8 @@ Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () 
 
     // Teachers
     Route::get('/guru', [ViewController::class, 'teacherList'])->name('teacher.list');
+    Route::get('/guru/{teachers}', [ViewController::class, 'teacherDetail'])->name('teacher.detail');
+
 
     // Students
     Route::get('/siswa', [ViewController::class, 'studentList'])->name('student.list');
@@ -29,7 +31,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
     Route::resource('teachers', TeacherController::class)->names('teacher')->only(['store', 'update', 'destroy']);
 
     // Routes for action student (CRUD)
-    Route::resource('students', StudentController::class)->names('students')->only(['store', 'update', 'destroy']);
+    Route::resource('students', StudentController::class)->names('student')->only(['store', 'update', 'destroy']);
 
 });
 
