@@ -95,6 +95,7 @@ export interface ITeacher {
     avatar: string | null;
 
     user: IUser;
+    current_homeroom: IHomeRoom;
 
     created_at: string;
     updated_at: string;

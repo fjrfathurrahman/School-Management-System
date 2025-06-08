@@ -34,8 +34,21 @@ class TeacherResource extends JsonResource
                 'email' => $this->user->email,
                 'user_type' => $this->user->user_type
             ],
+            'current_homeroom' => $this->currentHomeroom ? [
+                'id' => $this->currentHomeroom->id,
+                'school_year' => $this->currentHomeroom->school_year,
+                'semester' => $this->currentHomeroom->semester,
+                'class' => [
+                    'id' => $this->currentHomeroom->class->id,
+                    'name' => $this->currentHomeroom->class->name,
+                ],
+                'major' => [
+                    'id' => $this->currentHomeroom->major->id,
+                    'name' => $this->currentHomeroom->major->name,
+                ],
+            ] : null,
         ];
-        
+
     }
 }
 

@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ITeacher } from '@/types/response';
 import {
     AlertTriangle,
-    BookOpen,
+    CalendarDays,
     Calendar,
     Clock,
     GraduationCap,
@@ -17,8 +17,8 @@ import {
     Settings,
     Trash2,
     User,
-    Users,
     VenusAndMars,
+    Users,
 } from 'lucide-react';
 import { useState } from 'react';
 import { FormUpdateTeacher } from './FormTeacher';
@@ -85,19 +85,20 @@ function Header(teacher: ITeacher) {
                             {[
                                 {
                                     icon: <GraduationCap />,
-                                    label: `Kelas`,
+                                    label: teacher.education,
                                 },
                                 {
-                                    icon: <BookOpen />,
-                                    label: 'apa aja',
+                                    icon: <CalendarDays />,
+                                    label: teacher.entry_date,
                                 },
                                 {
                                     icon: <User />,
-                                    label: 'cocote',
+                                    label: teacher.nip,
                                 },
                             ].map((item, i) => (
                                 <Badge key={i} variant="secondary" className="border-white/30 bg-white/20 text-white">
-
+                                    {item.icon}
+                                    {item.label}
                                 </Badge>
                             ))}
                         </div>
@@ -157,14 +158,14 @@ function Profile(teacher: ITeacher) {
                 <CardContent className="space-y-4 px-6">
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         {[
-                                { label: 'NIP', value: teacher.nip },
-                                { label: 'Jenis Kelamin', value: teacher.gender },
-                                { label: 'Pendidikan', value: teacher.education },
-                                { label: 'Jabatan', value: teacher.position },
-                                { label: 'Status', value: teacher.status },
-                                { label: 'Tempat Lahir', value: teacher.place_of_birth },
-                                { label: 'Tanggal Lahir', value: teacher.date_of_birth },
-                                { label: 'Tanggal Masuk', value: teacher.entry_date },
+                            { label: 'NIP', value: teacher.nip },
+                            { label: 'Jenis Kelamin', value: teacher.gender },
+                            { label: 'Pendidikan', value: teacher.education },
+                            { label: 'Jabatan', value: teacher.position },
+                            { label: 'Status', value: teacher.status },
+                            { label: 'Tempat Lahir', value: teacher.place_of_birth },
+                            { label: 'Tanggal Lahir', value: teacher.date_of_birth },
+                            { label: 'Tanggal Masuk', value: teacher.entry_date },
                         ].map((item, i) => (
                             <div key={i}>
                                 <label className="text-sm font-medium text-gray-500">{item.label}</label>
@@ -183,39 +184,36 @@ function Profile(teacher: ITeacher) {
                 </CardContent>
             </Card>
 
-            {/* <Card className="border p-0 pb-6 shadow-lg">
+            {/* Info Wali Kelas {perlu di perbagus lagi}*/}
+            <Card className="border p-0 pb-6 shadow-lg">
                 <CardHeader className="rounded-t-lg bg-gradient-to-r from-teal-500 to-teal-600 py-6 text-white">
                     <CardTitle className="flex items-center gap-2">
                         <Users className="h-5 w-5" />
-                        Informasi Orang Tua/Wali
+                        Informasi Wali Kelas
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 px-6">
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        {[
-                            { label: 'Nama', value: teacher.parent?.name },
-                            { label: 'Hubungan', value: teacher.parent?.relation },
-                            { label: 'No. Telepon', value: teacher.parent?.phone },
-                            { label: 'Jenis Kelamin', value: teacher.parent?.gender },
-                            { label: 'Agama', value: teacher.parent?.religion },
-                            { label: 'Tanggal Lahir', value: teacher.parent?.birth_date },
-                        ].map((item, i) => (
-                            <div key={i}>
-                                <label className="text-sm font-medium text-gray-500">{item.label}</label>
-                                <p className="font-semibold capitalize">{item.value}</p>
+                        {teacher.current_homeroom ? (
+                            [
+                                { label: "Nama", value: teacher.current_homeroom.class?.name },
+                                { label: "Jurusan", value: teacher.current_homeroom.major?.name },
+                                { label: "Semester", value: teacher.current_homeroom.semester },
+                                { label: "Tahun Ajaran", value: teacher.current_homeroom.school_year },
+                            ].map((item, i) => (
+                                <div key={i}>
+                                    <label className="text-sm font-medium text-gray-500">{item.label}</label>
+                                    <p className="font-semibold capitalize">{item.value}</p>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="col-span-full">
+                                <p className="text-center text-sm font-medium text-gray-500">Tidak ada data</p>
                             </div>
-                        ))}
-                    </div>
-                    <Separator />
-                    <div>
-                        <label className="flex items-center gap-2 text-sm font-medium text-gray-500">
-                            <MapPin className="h-4 w-4" />
-                            Alamat
-                        </label>
-                        <p className="mt-1 font-semibold">{teacher.parent?.address}</p>
+                        )}
                     </div>
                 </CardContent>
-            </Card> */}
+            </Card>
         </div>
     );
 }
@@ -227,7 +225,7 @@ function Attendance() {
 function Actions(teacher: ITeacher) {
     const [isEditing, setIsEditing] = useState(false);
     const teacherQuery = useDeleteTeacher(teacher.id as number); // untuk 
-    
+
     // Handle Delete
     const handleDelete = () => {
         if (confirm('Apakah anda yakin ingin menghapus data ini?')) {

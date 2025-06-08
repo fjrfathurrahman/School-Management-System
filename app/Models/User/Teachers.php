@@ -47,12 +47,24 @@ class Teachers extends Model
      */
     public function scopeFullRelationship($query)
     {
-        return $query->with('user');
+        return $query->with([
+            'user',
+            'currentHomeroom.class',
+            'currentHomeroom.major'
+        ]);
     }
 
     public function homeroomAssignments()
     {
 
         return $this->hasMany(HomeroomTeacher::class);
+    }
+
+    public function currentHomeroom()
+    {
+
+        return $this->hasOne(HomeroomTeacher::class, 'teacher_id')
+            ->where('school_year', now()->year)
+            ->whereIn('semester', ['Ganjil', 'Genap']);
     }
 }

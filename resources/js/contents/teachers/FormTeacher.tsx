@@ -2,9 +2,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { FormInputRender } from '@/components/ui/form';
 import { SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { useGetAcademic } from '@/hooks/use-get';
 import { cn } from '@/lib/utils';
-import { IStudent, ITeacher } from '@/types/response';
+import { ITeacher } from '@/types/response';
 import { useForm } from '@inertiajs/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { FileText, LoaderCircle, Save } from 'lucide-react';
@@ -202,7 +201,7 @@ interface FormUpdateTeacherProps extends React.HTMLAttributes<HTMLDivElement> {
 
 function FormUpdateTeacher({ className, children, dataDefault, isDisabled, ...props }: FormUpdateTeacherProps) {
 
-    // hook form untuk update siswa
+    // hook form untuk update guru
     const { setData, processing, data, errors, put } = useForm({
         nip: dataDefault.nip,
         name: dataDefault.name,
@@ -218,13 +217,13 @@ function FormUpdateTeacher({ className, children, dataDefault, isDisabled, ...pr
         avatar: null,
     });
 
-    // hook untuk update siswa
+    // hook untuk update guru
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
         console.log(data);
 
         // kirim request
-        put(route('teachers.update', dataDefault.id), {
+        put(route('teacher.update', dataDefault.id), {
             onSuccess: () => toast.success('Berhasil mengubah data guru'),
             onError: (error) => {
                 console.log(error);

@@ -52,6 +52,6 @@ class HomeroomTeacher extends Model
 
     public function teacher()
     {
-        return $this->belongsTo(Teachers::class, 'teacher_id');
+        return $this->belongsTo(Teachers::class, 'teacher_id', 'id');
     }
 }
